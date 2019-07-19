@@ -11,9 +11,10 @@ URL: https://www.sciencedirect.com/science/article/pii/S0957417417305614
 """
 
 import math
+import cmath
 import sys
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class RDDM(SuperDetector):
@@ -58,7 +59,7 @@ class RDDM(SuperDetector):
 
     def run(self, pr):
 
-        pr = 1 if pr is False else 0
+        # pr = 1 if pr is False else 0
 
         warning_status, drift_status = False, False
 
@@ -73,7 +74,7 @@ class RDDM(SuperDetector):
             pos = self.first_pos  #
             for i in range(0, self.num_stored_instances):  #
                 self.m_p += (self.stored_predictions[pos] - self.m_p) / self.m_n  #
-                self.m_s = math.sqrt(self.m_p * (1 - self.m_p) / self.m_n)
+                self.m_s = cmath.sqrt(self.m_p * (1 - self.m_p) / self.m_n).real
                 if (
                     self.is_change_detected
                     and (self.m_n > self.min_num_instance)
@@ -100,7 +101,7 @@ class RDDM(SuperDetector):
                 self.last_warn_pos = -1
 
         self.m_p += (pr - self.m_p) / self.m_n
-        self.m_s = math.sqrt(self.m_p * (1 - self.m_p) / self.m_n)
+        self.m_s = cmath.sqrt(self.m_p * (1 - self.m_p) / self.m_n).real
 
         self.inst_num += 1
         self.m_n += 1

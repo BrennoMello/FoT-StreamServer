@@ -11,9 +11,10 @@ URL: https://link.springer.com/chapter/10.1007/978-3-540-28645-5_29
 """
 
 import math
+import cmath
 import sys
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class DDM(SuperDetector):
@@ -35,11 +36,11 @@ class DDM(SuperDetector):
 
         warning_status, drift_status = False, False
 
-        pr = 1 if pr is False else 0
+        # pr = 1 if pr is False else 0
 
         # 1. UPDATING STATS
         self.__P += (pr - self.__P) / self.NUM_INSTANCES_SEEN
-        self.__S = math.sqrt(self.__P * (1 - self.__P) / self.NUM_INSTANCES_SEEN)
+        self.__S = cmath.sqrt(self.__P * (1 - self.__P) / self.NUM_INSTANCES_SEEN).real
 
         self.NUM_INSTANCES_SEEN += 1
 

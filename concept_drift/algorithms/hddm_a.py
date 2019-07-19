@@ -12,7 +12,7 @@ URL: http://ieeexplore.ieee.org/abstract/document/6871418/
 
 import math
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class HDDM_A_test(SuperDetector):
@@ -37,7 +37,7 @@ class HDDM_A_test(SuperDetector):
 
     def run(self, pr):
 
-        pr = 1 if pr is False else 0
+        # pr = 1 if pr is False else 0
 
         warning_status = False
         drift_status = False
@@ -71,7 +71,7 @@ class HDDM_A_test(SuperDetector):
             self.c_max = self.total_c
             self.n_max = self.total_n
 
-        if self.mean_incr(self.drift_confidence):
+        if self.mean_incr(self.drift_confidence) or self.mean_decr():
             self.n_min = self.n_max = self.total_n = 0
             self.c_min = self.c_max = self.total_c = 0
             drift_status = True
@@ -95,6 +95,7 @@ class HDDM_A_test(SuperDetector):
             return False
         m = (self.total_n - self.n_min) / self.n_min * (1.0 / self.total_n)
         cota = math.sqrt((m / 2) * math.log(2.0 / confidence_level, math.e))
+        print(f'hddm_a: mean_inc [confidence_level={confidence_level}] = {self.total_c / self.total_n - self.c_min / self.n_min} >= cota ({cota})')
         return self.total_c / self.total_n - self.c_min / self.n_min >= cota
 
     def mean_decr(self):

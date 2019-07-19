@@ -14,13 +14,13 @@ import math
 import random
 import sys
 
-from detector import SuperDetector
-
+from .detector import SuperDetector
+import cmath
 
 class SeqDrift2ChangeDetector(SuperDetector):
     """The SeqDrift2 method class."""
 
-    def __init__(self, delta=0.01, block_size=200):
+    def __init__(self, delta=0.00001, block_size=30):
         super().__init__()
         self.DELTA = delta
         self.BLOCK_SIZE = block_size
@@ -143,9 +143,9 @@ class SeqDrift2:
 
             IsNotOptimized = True
             while IsNotOptimized:
-                squareRootValue = math.sqrt(
+                squareRootValue = cmath.sqrt(
                     x * x + 18 * self.rightRepositorySize * x * variance
-                )
+                ).real
                 previousStepEpsilon = (
                     1.0 / (3 * self.rightRepositorySize * (1 - ktemp))
                 ) * (x + squareRootValue)
@@ -163,9 +163,9 @@ class SeqDrift2:
             ktemp = self.adjustForDataRate(ktemp)
             self.leftReservoirSize = int(self.rightRepositorySize * (1 - ktemp) / ktemp)
             self.leftReservoir.setMaxSize(self.leftReservoirSize)
-            squareRootValue = math.sqrt(
+            squareRootValue = cmath.sqrt(
                 x * x + 18 * self.rightRepositorySize * x * variance
-            )
+            ).real
             currentStepEpsilon = (
                 1.0 / (3 * self.rightRepositorySize * (1 - ktemp))
             ) * (x + squareRootValue)

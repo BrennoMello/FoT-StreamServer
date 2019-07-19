@@ -11,8 +11,8 @@ URL: https://arxiv.org/pdf/1709.02457.pdf
 
 import math
 
-from detector import SuperDetector
-
+from .detector import SuperDetector
+import cmath
 
 class FHDDMS(SuperDetector):
     """The Stacking Fast Hoeffding Drift Detection Method (FHDDMS) class."""
@@ -32,7 +32,7 @@ class FHDDMS(SuperDetector):
         self._mu_max_large = 0
 
     def __cal_hoeffding_bound(self, n):
-        return math.sqrt(math.log((1 / self._DELTA), math.e) / (2 * n))
+        return cmath.sqrt(math.log((1 / self._DELTA), math.e) / (2 * n)).real
 
     def run(self, pr):
         drift_status = False

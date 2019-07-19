@@ -10,7 +10,7 @@ Published in: Biometrika 41.1/2 (1954): 100-115.
 URL: http://www.jstor.org/stable/2333009
 """
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class PH(SuperDetector):
@@ -31,7 +31,7 @@ class PH(SuperDetector):
 
     def run(self, pr):
 
-        pr = 1 if pr is False else 0
+        # pr = 1 if pr is False else 0
 
         warning_status = False
         drift_status = False
@@ -43,7 +43,7 @@ class PH(SuperDetector):
 
         # 2. UPDATING WARNING AND DRIFT STATUSES
         if self.m_n >= self.MINIMUM_NUM_INSTANCES:
-            if self.sum > self.lambda_:
+            if abs(self.sum) > self.lambda_:
                 drift_status = True
 
         return warning_status, drift_status

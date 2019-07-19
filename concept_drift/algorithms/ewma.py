@@ -12,13 +12,13 @@ URL: https://arxiv.org/pdf/1212.6018.pdf
 
 import math
 
-from detector import SuperDetector
-
+from .detector import SuperDetector
+import cmath
 
 class EWMA(SuperDetector):
     """The Exponentially Weighted Moving Average (EWMA) drift detection method class."""
 
-    def __init__(self, min_instance=30, lambda_=0.2):
+    def __init__(self, min_instance=30, lambda_=0.5):
 
         super().__init__()
 
@@ -33,7 +33,7 @@ class EWMA(SuperDetector):
 
     def run(self, pr):
 
-        pr = 1 if pr is False else 0
+        # pr = 1 if pr is False else 0
 
         warning_status = False
         drift_status = False
@@ -41,13 +41,13 @@ class EWMA(SuperDetector):
         # 1. UPDATING STATS
         self.m_sum += pr
         self.m_p = self.m_sum / self.m_n
-        self.m_s = math.sqrt(
+        self.m_s = cmath.sqrt(
             self.m_p
             * (1.0 - self.m_p)
             * self.lambda_
             * (1.0 - math.pow(1.0 - self.lambda_, 2.0 * self.m_n))
             / (2.0 - self.lambda_)
-        )
+        ).real
         self.m_n += 1
 
         self.z_t += self.lambda_ * (pr - self.z_t)
@@ -63,7 +63,8 @@ class EWMA(SuperDetector):
         if self.m_n < self.MINIMUM_NUM_INSTANCES:
             return False, False
 
-        if self.z_t > self.m_p + L_t * self.m_s:
+        # self.z_t > self.m_p + L_t * self.m_s
+        if  abs(self.z_t - (self.m_p + L_t * self.m_s)) > self.lambda_:
             drift_status = True
         elif self.z_t > self.m_p + 0.5 * L_t * self.m_s:
             warning_status = True

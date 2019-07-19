@@ -11,11 +11,13 @@ URL: http://www.cs.upc.edu/~GAVALDA/papers/adwin06.pdf
 """
 
 import math
+import cmath
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class ListItem:
+
     def __init__(self, next_node=None, previous_node=None):
 
         self.bucket_size_row = 0
@@ -82,6 +84,7 @@ class ListItem:
 
 
 class List:
+
     def __init__(self):
         self.count = None
         self.head = None
@@ -130,7 +133,7 @@ class List:
 class ADWINChangeDetector(SuperDetector):
     """The ADaptive WINdowing (ADWIN) drift detection method class."""
 
-    def __init__(self, delta=0.002):
+    def __init__(self, delta=0.005):
 
         super().__init__()
 
@@ -146,10 +149,12 @@ class ADWINChangeDetector(SuperDetector):
         self.adwin = ADWIN(self.DELTA)
 
     def get_settings(self):
-        return [str(self.DELTA), "$\delta$:" + str(self.DELTA).upper()]
+        return [str(self.DELTA),
+                "$\delta$:" + str(self.DELTA).upper()]
 
 
 class ADWIN:
+
     def __init__(self, delta):
 
         self.DELTA = delta
@@ -177,12 +182,7 @@ class ADWIN:
         self.insert_element_bucket(0, value, self.list_row_buckets.head)
         inc_variance = 0
         if self.WIDTH > 1:
-            inc_variance = (
-                (self.WIDTH - 1)
-                * (value - self.TOTAL / (self.WIDTH - 1))
-                * (value - self.TOTAL / (self.WIDTH - 1))
-                / self.WIDTH
-            )
+            inc_variance = (self.WIDTH - 1) * (value - self.TOTAL / (self.WIDTH - 1)) * (value - self.TOTAL / (self.WIDTH - 1)) / self.WIDTH
         self.VARIANCE += inc_variance
 
         self.TOTAL += value
@@ -202,9 +202,7 @@ class ADWIN:
         self.WIDTH -= n1
         self.TOTAL -= node.get_total(0)
         u1 = node.get_total(0) / n1
-        inc_variance = node.get_variance(0) + n1 * self.WIDTH * (
-            u1 - self.TOTAL / self.WIDTH
-        ) * (u1 - self.TOTAL / self.WIDTH) / (n1 + self.WIDTH)
+        inc_variance = node.get_variance(0) + n1 * self.WIDTH * (u1 - self.TOTAL / self.WIDTH) * (u1 - self.TOTAL / self.WIDTH) / (n1 + self.WIDTH)
         self.VARIANCE -= inc_variance
         if self.VARIANCE < 0:
             self.VARIANCE = 0
@@ -232,10 +230,7 @@ class ADWIN:
                 u1 = cursor.get_total(0) / n1
                 u2 = cursor.get_total(1) / n2
                 inc_variance = n1 * n2 * (u1 - u2) * (u1 - u2) / (n1 + n2)
-                next_node.insert_bucket(
-                    cursor.get_total(0) + cursor.get_total(1),
-                    cursor.get_variance(0) + cursor.get_variance(1) + inc_variance,
-                )
+                next_node.insert_bucket(cursor.get_total(0) + cursor.get_total(1), cursor.get_variance(0) + cursor.get_variance(1) + inc_variance)
                 self.bucket_number += 1
                 cursor.compress_buckets_row(2)
                 if next_node.bucket_size_row <= self.MAXBUCKETS:
@@ -252,10 +247,7 @@ class ADWIN:
         self.mint_time += 1
         self.insert_element(pr)
 
-        if (
-            self.mint_time % self.mint_clock == 0
-            and self.WIDTH > self.mint_minim_longitud_window
-        ):
+        if self.mint_time % self.mint_clock == 0 and self.WIDTH > self.mint_minim_longitud_window:
             bln_reduce_width = True
             while bln_reduce_width:
                 bln_reduce_width = False
@@ -280,11 +272,7 @@ class ADWIN:
                             bln_exit = True
                             break
 
-                        if (
-                            n1 > self.mint_min_win_length + 1
-                            and n0 > self.mint_min_win_length + 1
-                            and self.bln_cut_expression(n0, n1, u0, u1)
-                        ):
+                        if n1 > self.mint_min_win_length + 1 and n0 > self.mint_min_win_length + 1 and self.bln_cut_expression(n0, n1, u0, u1):
                             self.detect = self.mint_time
 
                             if self.detect == 0:
@@ -307,10 +295,8 @@ class ADWIN:
     def bln_cut_expression(self, n0, n1, u0, u1):
         diff = math.fabs((u0 / n0) - (u1 / n1))
         n = self.WIDTH
-        m = (1 / (n0 - self.mint_min_win_length + 1)) + (
-            1 / (n1 - self.mint_min_win_length + 1)
-        )
+        m = (1 / (n0 - self.mint_min_win_length + 1)) + (1 / (n1 - self.mint_min_win_length + 1))
         dd = math.log(2 * math.log(n) / self.DELTA)
         v = self.VARIANCE / self.WIDTH
-        e = math.sqrt(2 * m * v * dd) + 2 / 3 * dd * m
+        e = cmath.sqrt(2 * m * v * dd).real + 2 / 3 * dd * m
         return diff > e

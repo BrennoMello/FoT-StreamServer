@@ -12,7 +12,7 @@ URL: https://link.springer.com/chapter/10.1007/978-3-319-46227-1_7
 
 import math
 
-from detector import SuperDetector
+from .detector import SuperDetector
 
 
 class FHDDM(SuperDetector):

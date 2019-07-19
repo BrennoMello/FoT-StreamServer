@@ -11,8 +11,8 @@ URL: http://www.cs.upc.edu/~abifet/EDDM.pdf
 
 import math
 
-from detector import SuperDetector
-
+from .detector import SuperDetector
+import cmath
 
 class EDDM(SuperDetector):
     """The Early Drift Detection Method (EDDM) class."""
@@ -55,7 +55,7 @@ class EDDM(SuperDetector):
             self.P += (distance - self.P) / self.NUM_ERRORS
             self.S_TEMP += (distance - self.P) * (distance - old_p)
 
-            s = math.sqrt(self.S_TEMP / self.NUM_ERRORS)
+            s = cmath.sqrt(self.S_TEMP / self.NUM_ERRORS).real
             m2s = self.P + 2 * s
 
             if self.NUM_INSTANCES_SEEN > self.MINIMUM_NUM_INSTANCES:
