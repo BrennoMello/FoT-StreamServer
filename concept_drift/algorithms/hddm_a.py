@@ -95,7 +95,6 @@ class HDDM_A_test(SuperDetector):
             return False
         m = (self.total_n - self.n_min) / self.n_min * (1.0 / self.total_n)
         cota = math.sqrt((m / 2) * math.log(2.0 / confidence_level, math.e))
-        print(f'hddm_a: mean_inc [confidence_level={confidence_level}] = {self.total_c / self.total_n - self.c_min / self.n_min} >= cota ({cota})')
         return self.total_c / self.total_n - self.c_min / self.n_min >= cota
 
     def mean_decr(self):
