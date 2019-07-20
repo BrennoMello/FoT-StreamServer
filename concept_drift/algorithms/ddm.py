@@ -22,7 +22,7 @@ class DDM(SuperDetector):
 
     def __init__(self, min_instance=30):
 
-        super().__init__()
+        super(DDM, self).__init__()
 
         self.MINIMUM_NUM_INSTANCES = min_instance
         self.NUM_INSTANCES_SEEN = 1
@@ -65,7 +65,7 @@ class DDM(SuperDetector):
         return warning_status, drift_status
 
     def reset(self):
-        super().reset()
+        super(DDM, self).reset()
         self.NUM_INSTANCES_SEEN = 1
         self.__P = 1
         self.__S = 0

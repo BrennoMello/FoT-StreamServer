@@ -21,7 +21,7 @@ class SeqDrift2ChangeDetector(SuperDetector):
     """The SeqDrift2 method class."""
 
     def __init__(self, delta=0.00001, block_size=30):
-        super().__init__()
+        super(SeqDrift2ChangeDetector, self).__init__()
         self.DELTA = delta
         self.BLOCK_SIZE = block_size
         self.seq_drift2 = SeqDrift2(self.DELTA, self.BLOCK_SIZE)
@@ -31,7 +31,7 @@ class SeqDrift2ChangeDetector(SuperDetector):
         return False, drift_status
 
     def reset(self):
-        super().reset()
+        super(SeqDrift2ChangeDetector, self).reset()
         self.seq_drift2 = SeqDrift2(self.DELTA, self.BLOCK_SIZE)
 
     def get_settings(self):

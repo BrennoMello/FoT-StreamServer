@@ -18,7 +18,7 @@ class CUSUM(SuperDetector):
 
     def __init__(self, min_instance=30, delta=0.005, lambda_=50):
 
-        super().__init__()
+        super(CUSUM, self).__init__()
 
         self.MINIMUM_NUM_INSTANCES = min_instance
 
@@ -48,7 +48,7 @@ class CUSUM(SuperDetector):
         return warning_status, drift_status
 
     def reset(self):
-        super().reset()
+        super(CUSUM, self).reset()
         self.m_n = 1
         self.x_mean = 0
         self.sum = 0

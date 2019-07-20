@@ -20,7 +20,7 @@ class EWMA(SuperDetector):
 
     def __init__(self, min_instance=30, lambda_=0.5):
 
-        super().__init__()
+        super(EWMA, self).__init__()
 
         self.MINIMUM_NUM_INSTANCES = min_instance
 
@@ -72,7 +72,7 @@ class EWMA(SuperDetector):
         return warning_status, drift_status
 
     def reset(self):
-        super().reset()
+        super(EWMA, self).reset()
         self.m_n = 1
         self.m_sum = 0
         self.m_p = 0

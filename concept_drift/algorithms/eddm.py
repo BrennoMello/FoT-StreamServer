@@ -19,7 +19,7 @@ class EDDM(SuperDetector):
 
     def __init__(self):
 
-        super().__init__()
+        super(EDDM, self).__init__()
 
         self.WARNING_LEVEL = 0.95
         self.OUT_CONTROL_LEVEL = 0.9
@@ -71,7 +71,7 @@ class EDDM(SuperDetector):
         return warning_status, drift_status
 
     def reset(self):
-        super().reset()
+        super(EDDM, self).reset()
         self.P = 0.0
         self.S_TEMP = 0.0
         self.NUM_ERRORS = 0

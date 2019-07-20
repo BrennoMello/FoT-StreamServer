@@ -22,7 +22,7 @@ class HDDM_A_test(SuperDetector):
         self, drift_confidence=0.001, warning_confidence=0.005, test_type="two-sided"
     ):
 
-        super().__init__()
+        super(HDDM_A_test, self).__init__()
 
         self.drift_confidence = drift_confidence
         self.warning_confidence = warning_confidence
@@ -105,7 +105,7 @@ class HDDM_A_test(SuperDetector):
         return self.c_max / self.n_max - self.total_c / self.total_n >= cota
 
     def reset(self):
-        super().reset()
+        super(HDDM_A_test, self).reset()
         self.n_min = 0
         self.c_min = 0
         self.total_n = 0

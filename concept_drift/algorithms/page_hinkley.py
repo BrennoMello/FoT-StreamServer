@@ -18,7 +18,7 @@ class PH(SuperDetector):
 
     def __init__(self, min_instance=30, delta=0.005, lambda_=50, alpha=1 - 0.0001):
 
-        super().__init__()
+        super(PH, self).__init__()
 
         self.MINIMUM_NUM_INSTANCES = min_instance
 
@@ -49,7 +49,7 @@ class PH(SuperDetector):
         return warning_status, drift_status
 
     def reset(self):
-        super().reset()
+        super(PH, self).reset()
         self.m_n = 1
         self.x_mean = 0.0
         self.sum = 0.0

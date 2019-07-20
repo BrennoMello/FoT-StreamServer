@@ -135,7 +135,7 @@ class ADWINChangeDetector(SuperDetector):
 
     def __init__(self, delta=0.005):
 
-        super().__init__()
+        super(ADWINChangeDetector, self).__init__()
 
         self.DELTA = delta
         self.adwin = ADWIN(self.DELTA)
@@ -145,7 +145,7 @@ class ADWINChangeDetector(SuperDetector):
         return False, drift_status
 
     def reset(self):
-        super().reset()
+        super(ADWINChangeDetector, self).reset()
         self.adwin = ADWIN(self.DELTA)
 
     def get_settings(self):
