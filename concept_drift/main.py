@@ -15,14 +15,14 @@ from algorithms.seq_drift2 import SeqDrift2ChangeDetector
 from algorithms.hddm_a import HDDM_A_test
 
 
-DETECTORS = (
-    CUSUM,
-    PH,
-    EWMA,
-    ADWINChangeDetector,
-    SeqDrift2ChangeDetector,
-    HDDM_A_test,
-)
+DETECTORS = {
+    "CUSUM": {"class": CUSUM, "args": {"min_instance": 50, "delta": 0.001, "lambda_": 750}},
+    "PH": {"class": PH, "args": {"min_instance": 50, "delta": 0.001, "lambda_": 750}},
+    "EWMA": {"class": EWMA, "args": {"min_instance": 50, "lambda_": 1.5}},
+    "ADWINChangeDetector": {"class": ADWINChangeDetector, "args": {"delta": 0.005}},
+    "SeqDrift2ChangeDetector": {"class": SeqDrift2ChangeDetector, "args": {"block_size": 50, "delta": 0.00001}},
+    "HDDM_A_test": {"class": HDDM_A_test, "args": {"drift_confidence": 0.00001}},
+}
 
 DATASET_PATH = os.path.join(dirname(dirname(__file__)), "intel-lab-dataset/dataSet_temp.txt")
 
@@ -30,8 +30,9 @@ raw_dataset = pd.read_csv(DATASET_PATH, delim_whitespace=True, header=0)
 temperatures = raw_dataset.iloc[:, -1].dropna().head(5000).values
 
 # No Wavelet
-for detector in DETECTORS:
-    detector_instance = detector()
+for detector_name in DETECTORS:
+    detector_setup = DETECTORS[detector_name]
+    detector_instance = detector_setup["class"](**detector_setup["args"])
 
     drift_indexes = []
     for index, value in enumerate(temperatures):
@@ -44,7 +45,7 @@ for detector in DETECTORS:
 
     plt.ylim((0, 50))
     plt.suptitle('Without wavelet')
-    plt.title(str(detector))
+    plt.title(str(detector_name) + str(detector_setup["args"]))
     plt.plot(temperatures)
 
     for drift_index in drift_indexes:
